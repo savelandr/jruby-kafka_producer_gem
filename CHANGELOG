@@ -1,2 +1,4 @@
+== 1.0.1 / 08-17-15
+* added round-robin and specific partition sends
 == 1.0.0 / 08-10-15
 * Initial release

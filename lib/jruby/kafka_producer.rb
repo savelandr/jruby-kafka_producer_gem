@@ -27,9 +27,34 @@ class KafkaProducer
     @producer = Java::OrgApacheKafkaClientsProducer::KafkaProducer.new config
   end
 
-  def send(queue, key, message)
-    @producer.send Java::OrgApacheKafkaClientsProducer::ProducerRecord.new(queue, key, message)
+  def send(topic, key, message)
+    @producer.send Java::OrgApacheKafkaClientsProducer::ProducerRecord.new(topic, key, message)
   end
+
+  def send_to_partition(topic, partition, message)
+    partition_ids = get_partition_ids(topic)
+    raise ArgumentError, "Not a partition: #{topic}, #{partition_ids}.include?(#{partition})" unless partition_ids.include?(partition)
+    @producer.send Java::OrgApacheKafkaClientsProducer::ProducerRecord.new(topic, partition, nil, message)
+  end
+
+  def round_robin(topic, message)
+    @message_counts ||= Hash.new
+    @message_counts[topic] ||= 0
+    partition_ids = get_partition_ids(topic)
+    count = @message_counts[topic]
+    offset = count.modulo partition_ids.length
+    partition_id = partition_ids[offset]
+    send_to_partition(topic, partition_id, message)
+    @message_counts[topic] += 1
+    return partition_id
+  end
+
+  def get_partition_ids(topic)
+    @partitions ||= Hash.new
+    @partitions[topic] ||= @producer.partitions_for(topic)
+    @partitions[topic].map {|p| p.partition}
+  end
+  private :get_partition_ids
 
   def close
     @producer.close
