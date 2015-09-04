@@ -2,7 +2,7 @@ require 'jruby/kafka'
 
 class KafkaProducer
 
-  def initialize(host, port=9092, key_serializer = :string, value_serializer = :string)
+  def initialize(host, port=9092, key_serializer = :string, value_serializer = :string, schema_repo_url=nil)
     config = Java::JavaUtil::Properties.new
     config['bootstrap.servers'] = "#{host}:#{port}"
 
@@ -11,8 +11,11 @@ class KafkaProducer
       config['key.serializer'] = "org.apache.kafka.common.serialization.StringSerializer"
     when :byte_array, "byte_array"
       config['key.serializer'] = "org.apache.kafka.common.serialization.ByteArraySerializer"
+    when :avro, "avro"
+      require 'jruby/avro-serializer'
+      config['key.serializer'] = "io.confluent.kafka.serializers.KafkaAvroSerializer"
     else
-      raise ArgumentError, "key_serializer must be :string or :byte_array"
+      raise ArgumentError, "key_serializer must be :string, :byte_array, or :avro"
     end
 
     case value_serializer
@@ -20,8 +23,16 @@ class KafkaProducer
       config['value.serializer'] = "org.apache.kafka.common.serialization.StringSerializer"
     when :byte_array, "byte_array"
       config['value.serializer'] = "org.apache.kafka.common.serialization.ByteArraySerializer"
+    when :avro, "avro"
+      require 'jruby/avro-serializer'
+      config['value.serializer'] = "io.confluent.kafka.serializers.KafkaAvroSerializer"
     else
-      raise ArgumentError, "value_serializer must be :string or :byte_array"
+      raise ArgumentError, "value_serializer must be :string, :byte_array, or :avro"
+    end
+
+    if key_serializer.to_s == "avro" || value_serializer.to_s == "avro"
+      raise ArgumentError, "schema_repo_url required with avro serializer" unless schema_repo_url
+      config['schema.registry.url'] = schema_repo_url
     end
 
     @producer = Java::OrgApacheKafkaClientsProducer::KafkaProducer.new config

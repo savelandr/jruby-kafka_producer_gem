@@ -10,7 +10,7 @@ update_spec = Gem::Specification.new do |spec|
   spec.description = "Kafka producer for testing convenience"
   spec.summary = "Kafka producer"
   spec.name = "jruby-kafka_producer"
-  spec.version = "1.0.1"
+  spec.version = "1.0.2"
   spec.require_path = "lib"
   spec.files = ['README.md', 'CHANGELOG', 'lib/jruby/kafka_producer.rb']
   spec.add_dependency "jruby-kafka", "~> 0.8.2"
