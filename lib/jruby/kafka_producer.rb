@@ -12,7 +12,7 @@ class KafkaProducer
     when :byte_array, "byte_array"
       config['key.serializer'] = "org.apache.kafka.common.serialization.ByteArraySerializer"
     when :avro, "avro"
-      require 'jruby/avro-serializer'
+      require 'jruby/avro_serializer'
       config['key.serializer'] = "io.confluent.kafka.serializers.KafkaAvroSerializer"
     else
       raise ArgumentError, "key_serializer must be :string, :byte_array, or :avro"
@@ -24,7 +24,7 @@ class KafkaProducer
     when :byte_array, "byte_array"
       config['value.serializer'] = "org.apache.kafka.common.serialization.ByteArraySerializer"
     when :avro, "avro"
-      require 'jruby/avro-serializer'
+      require 'jruby/avro_serializer'
       config['value.serializer'] = "io.confluent.kafka.serializers.KafkaAvroSerializer"
     else
       raise ArgumentError, "value_serializer must be :string, :byte_array, or :avro"
