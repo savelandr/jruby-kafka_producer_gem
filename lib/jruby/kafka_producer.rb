@@ -33,6 +33,11 @@ class KafkaProducer
     if key_serializer.to_s == "avro" || value_serializer.to_s == "avro"
       raise ArgumentError, "schema_repo_url required with avro serializer" unless schema_repo_url
       config['schema.registry.url'] = schema_repo_url
+      if $DEBUG
+        l = Java::OrgApacheLog4j::Logger.get_logger "io.confluent"
+        l.set_level(Java::OrgApacheLog4j::Level::DEBUG)
+        l.add_appender Java::OrgApacheLog4j::ConsoleAppender.new(Java::OrgApacheLog4j::SimpleLayout.new, Java::OrgApacheLog4j::ConsoleAppender::SYSTEM_OUT)
+      end
     end
 
     @producer = Java::OrgApacheKafkaClientsProducer::KafkaProducer.new config

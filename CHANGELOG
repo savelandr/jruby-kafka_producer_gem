@@ -1,3 +1,5 @@
+== 1.0.3 / 09-15-15
+* added debug for serializer
 == 1.0.2 / 09-04-15
 * added avro serializer
 == 1.0.1 / 08-17-15
