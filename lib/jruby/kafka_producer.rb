@@ -66,11 +66,10 @@ class KafkaProducer
   end
 
   def get_partition_ids(topic)
-    @partitions ||= Hash.new
-    @partitions[topic] ||= @producer.partitions_for(topic)
-    @partitions[topic].map {|p| p.partition}
+    partitions = @producer.partitions_for(topic)
+    active_partitions = partitions.find_all {|p| p.leader}
+    active_partitions.map {|p| p.partition}
   end
-  private :get_partition_ids
 
   def close
     @producer.close

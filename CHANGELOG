@@ -1,3 +1,5 @@
+== 1.0.4 / 09-28-15
+* changed get_partition_ids to get only partitions with a leader
 == 1.0.3 / 09-15-15
 * added debug for serializer
 == 1.0.2 / 09-04-15
