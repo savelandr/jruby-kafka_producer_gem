@@ -2,9 +2,9 @@ require 'jruby/kafka'
 
 class KafkaProducer
 
-  def initialize(host, port=9092, key_serializer = :string, value_serializer = :string, schema_repo_url=nil)
+  def initialize(broker_url, key_serializer = :string, value_serializer = :string, schema_repo_url=nil)
     config = Java::JavaUtil::Properties.new
-    config['bootstrap.servers'] = "#{host}:#{port}"
+    config['bootstrap.servers'] = broker_url
 
     case key_serializer
     when :string, "string"
