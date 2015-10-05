@@ -1,3 +1,5 @@
+== 3.0.0 / 10-05-15
+* changed "send" to "queue", to disambiguate it from the existing ruby "send" method.  This obviously breaks method calls to produce messages.
 == 2.0.0 / 09-29-15
 * pass broker url vs host/port to allow for multiple hosts and compatibility with other kafka stuff.  This breaks the new method from the old way.
 == 1.0.4 / 09-28-15

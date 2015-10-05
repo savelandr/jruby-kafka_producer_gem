@@ -43,11 +43,11 @@ class KafkaProducer
     @producer = Java::OrgApacheKafkaClientsProducer::KafkaProducer.new config
   end
 
-  def send(topic, key, message)
+  def queue(topic, key, message)
     @producer.send Java::OrgApacheKafkaClientsProducer::ProducerRecord.new(topic, key, message)
   end
 
-  def send_to_partition(topic, partition, message)
+  def queue_to_partition(topic, partition, message)
     partition_ids = get_partition_ids(topic)
     raise ArgumentError, "Not a partition: #{topic}, #{partition_ids}.include?(#{partition})" unless partition_ids.include?(partition)
     @producer.send Java::OrgApacheKafkaClientsProducer::ProducerRecord.new(topic, partition, nil, message)
@@ -60,7 +60,7 @@ class KafkaProducer
     count = @message_counts[topic]
     offset = count.modulo partition_ids.length
     partition_id = partition_ids[offset]
-    send_to_partition(topic, partition_id, message)
+    queue_to_partition(topic, partition_id, message)
     @message_counts[topic] += 1
     return partition_id
   end
