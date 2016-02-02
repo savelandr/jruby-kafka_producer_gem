@@ -1,3 +1,5 @@
+== 4.0.0 / 02-02-16
+* changed syntax of connection, this is a breaking change.  Now options can be passed, so more than just the schema repo url can be set.
 == 3.0.0 / 10-05-15
 * changed "send" to "queue", to disambiguate it from the existing ruby "send" method.  This obviously breaks method calls to produce messages.
 == 2.0.0 / 09-29-15
